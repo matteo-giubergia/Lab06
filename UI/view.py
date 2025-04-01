@@ -13,35 +13,45 @@ class View(ft.UserControl):
         self._controller = None
         # graphical elements
         self._title = None
-        self.txt_name = None
-        self.btn_hello = None
-        self.txt_result = None
-        self.txt_container = None
+        self.txt_out = None
+        #dichiaro dropdown
+        self.ddAnno = None
+        self.ddBrand = None
+        self.ddRetailer = None
+        #bottoni
+        self.btnTopVendite = None
+        self.btnAnalizzaVendite = None
+
+
 
     def load_interface(self):
         # title
-        self._title = ft.Text("Hello World", color="blue", size=24)
+        self._title = ft.Text("Analizza Vendite", color="blue", size=24)
         self._page.controls.append(self._title)
 
-        #ROW with some controls
-        # text field for the name
-        self.txt_name = ft.TextField(
-            label="name",
-            width=200,
-            hint_text="Insert a your name"
-        )
+        #inserisco dropdown
+        self.ddAnno = ft.Dropdown(label="Anno", options=[ft.dropdown.Option("Nessun filtro")], width = 200)
+        self._controller.fillDDAnno()
 
-        # button for the "hello" reply
-        self.btn_hello = ft.ElevatedButton(text="Hello", on_click=self._controller.handle_hello)
-        row1 = ft.Row([self.txt_name, self.btn_hello],
-                      alignment=ft.MainAxisAlignment.CENTER)
-        self._page.controls.append(row1)
+        self.ddBrand = ft.Dropdown(label="Brand", options=[ft.dropdown.Option("Nessun filtro")], width = 200)
+        self._controller.fillDDBrand()
 
-        # List View where the reply is printed
-        self.txt_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
-        self._page.controls.append(self.txt_result)
-        self._page.update()
+        self.ddRetailer = ft.Dropdown(label="Retailer", options=[ft.dropdown.Option("Nessun filtro")], width = 400)
+        self._controller.fillDDRetailer()
 
+        #inserisco bottoni
+        self.btnTopVendite = ft.ElevatedButton(text="Top Vendite", on_click=self._controller.handleTopVendite, width = 200)
+        self.btnAnalizzaVendite = ft.ElevatedButton(text="Analizza Vendite", width = 200)
+
+        #righe
+        row1 = ft.Row([self.ddAnno, self.ddBrand, self.ddRetailer], alignment=ft.MainAxisAlignment.CENTER)
+        row2 = ft.Row([self.btnTopVendite, self.btnAnalizzaVendite], alignment=ft.MainAxisAlignment.CENTER)
+
+        # List View
+        self.txt_out = ft.ListView(expand=1)
+
+        #aggiorna pagina
+        self._page.add(row1, row2, self.txt_out)
     @property
     def controller(self):
         return self._controller

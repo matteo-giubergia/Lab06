@@ -1,3 +1,22 @@
+from database.DAO import DAO
+
 class Model:
     def __init__(self):
-        pass
+        self.dao = DAO()
+
+    def getAnni(self):
+        return self.dao.getAnni()
+
+    def getProdotti(self):
+        return self.dao.getProdotti()
+
+    def getBrand(self):
+        return self.dao.getBrand()
+    def getRetailers(self):
+        return self.dao.getRetailers()
+
+    def getVenditeNoFiltri(self):
+        return self.dao.getVenditeNoFiltri()
+
+    def getVendite(self, anno, brand, retailer):
+        return self.dao.getVendite(anno, brand, retailer)
