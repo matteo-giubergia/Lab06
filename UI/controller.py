@@ -9,6 +9,19 @@ class Controller:
         self._view = view
         # the model, which implements the logic of the program and holds the data
         self._model = model
+    def selezionaFiltri(self):
+        brand = self._view.ddBrand.value
+        anno = self._view.ddAnno.value
+        retailer = self._view.ddRetailer.value
+        if anno is None:
+            self._view.create_alert("seleziona anno")
+            return
+        if brand is None:
+            self._view.create_alert("seleziona brand")
+            return
+        if retailer is None:
+            self._view.create_alert("seleziona retailer")
+            return
 
 
     def handleTopVendite(self,e):
@@ -16,18 +29,38 @@ class Controller:
         brand = self._view.ddBrand.value
         anno = self._view.ddAnno.value
         retailer = self._view.ddRetailer.value # retsituisce l'oggetto?
-        print(f"{brand} - {anno} - {retailer}")
+        flag = False
         if brand=="Nessun filtro" and anno=="Nessun filtro" and retailer=="Nessun filtro":
             lista = self._model.getVenditeNoFiltri()
+            flag = True
             lista.sort(key=operator.attrgetter('guadagno'), reverse=True)
-        else:                                                                   # le altre combinazioni sono da fare?
+            if len(lista)==0:
+                self._view.txt_out.controls.append(ft.Text(f"non ci sono corssispondenze per anno: {anno}, brand: {brand} e retailer: {retailer}"))
+        elif brand is not None and anno is not None and retailer is not None:                                                                   # le altre combinazioni sono da fare?
             lista = self._model.getVendite(anno, brand, retailer)
+            flag = True
+            if len(lista)==0:
+                self._view.txt_out.controls.append(ft.Text(f"non ci sono corssispondenze per anno: {anno}, brand: {brand} e retailer: {retailer}"))
+        else:
+            self.selezionaFiltri()
+        # self._view.ddBrand.value ="Nessun filtro"
+        # self._view.ddAnno.value ="Nessun filtro"
+        # self._view.ddRetailer.value="Nessun filtro"
+        if flag:
+            for v in lista:
+                self._view.txt_out.controls.append(ft.Text(f"{v}"))
+            self._view._page.update()
 
-        for v in lista:
-            self._view.txt_out.controls.append(ft.Text(f"{v}"))
+    def handleAnalizzaVendite(self,e):
+        self._view.txt_out.controls.clear()
+        self.selezionaFiltri()
+        brand = self._view.ddBrand.value
+        anno = self._view.ddAnno.value
+        retailer = self._view.ddRetailer.value
+
+        res = self._model.AnalizzaVendite(anno, brand, retailer)
+        self._view.txt_out.controls.append(ft.Text(f"Statistiche di vendita:\nGiro d'affari: {res[0]["guadagno"]}\nNumero vendite: {res[0]["quantitaTot"]}\nNumero retailer: {res[0]["numretailers"]}\nNumero prodotti: {res[0]["numProdDistinti"]}"))
         self._view._page.update()
-
-
 
 
     def fillDDAnno(self):

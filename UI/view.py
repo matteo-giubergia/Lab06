@@ -41,7 +41,7 @@ class View(ft.UserControl):
 
         #inserisco bottoni
         self.btnTopVendite = ft.ElevatedButton(text="Top Vendite", on_click=self._controller.handleTopVendite, width = 200)
-        self.btnAnalizzaVendite = ft.ElevatedButton(text="Analizza Vendite", width = 200)
+        self.btnAnalizzaVendite = ft.ElevatedButton(text="Analizza Vendite", on_click=self._controller.handleAnalizzaVendite, width = 200)
 
         #righe
         row1 = ft.Row([self.ddAnno, self.ddBrand, self.ddRetailer], alignment=ft.MainAxisAlignment.CENTER)

@@ -20,3 +20,6 @@ class Model:
 
     def getVendite(self, anno, brand, retailer):
         return self.dao.getVendite(anno, brand, retailer)
+
+    def AnalizzaVendite(self, anno, brand, retailer):
+        return self.dao.AnalizzaVendite(anno, brand, retailer)
