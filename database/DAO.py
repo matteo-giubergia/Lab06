@@ -21,17 +21,20 @@ class DAO():
         cnx.close()
         return anni
 
-    def getVenditeNoFiltri(self):
+    def getVenditeNoFiltri(self, anno, brand, retailer):
         cnx = DBConnect.get_connection()
         cursor = cnx.cursor(dictionary=True)
         # query = """select s.`Date`, s.Unit_sale_price, s.Quantity, s.Product_number, s.Retailer_code
         #             from go_daily_sales s, go_products p
         #             where year(s.`Date`)=%s and p.Product_brand=%s and s.Retailer_code=%s"""
         query="""select s.`Date`, (s.Unit_sale_price*s.Quantity) as guadagno, s.Product_number, s.Retailer_code 
-                     from go_daily_sales s 
+                     from go_daily_sales s
+                     JOIN go_products p ON s.Product_number = p.Product_number
+                     where s.Retailer_code = coalesce(%s, s.Retailer_code) and p.Product_brand = coalesce(%s, p.Product_brand)
+                            and year(s.`Date`) = coalesce(%s, year(s.`Date`))  
                      order by guadagno desc
-                     limit 5"""
-        cursor.execute(query)
+                     limit 5""" # o prende i valori in input o prende il primo a caso(?)
+        cursor.execute(query, (anno, brand, retailer))
         vendite = []
         for r in cursor.fetchall():
             # guadagno = float(r["Unit_sale_price"])*float(r["Quantity"])

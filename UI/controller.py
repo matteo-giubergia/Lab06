@@ -29,27 +29,30 @@ class Controller:
         brand = self._view.ddBrand.value
         anno = self._view.ddAnno.value
         retailer = self._view.ddRetailer.value # retsituisce l'oggetto?
-        flag = False
-        if brand=="Nessun filtro" and anno=="Nessun filtro" and retailer=="Nessun filtro":
-            lista = self._model.getVenditeNoFiltri()
-            flag = True
-            lista.sort(key=operator.attrgetter('guadagno'), reverse=True)
-            if len(lista)==0:
-                self._view.txt_out.controls.append(ft.Text(f"non ci sono corssispondenze per anno: {anno}, brand: {brand} e retailer: {retailer}"))
-        elif brand is not None and anno is not None and retailer is not None:                                                                   # le altre combinazioni sono da fare?
-            lista = self._model.getVendite(anno, brand, retailer)
-            flag = True
-            if len(lista)==0:
-                self._view.txt_out.controls.append(ft.Text(f"non ci sono corssispondenze per anno: {anno}, brand: {brand} e retailer: {retailer}"))
+        # flag = False
+        # if brand=="" and anno=="" and retailer=="":
+        #     lista = self._model.getVenditeNoFiltri()
+        #     flag = True
+        #     lista.sort(key=operator.attrgetter('guadagno'), reverse=True)
+        #     if len(lista)==0:
+        #         self._view.txt_out.controls.append(ft.Text(f"non ci sono corssispondenze per anno: {anno}, brand: {brand} e retailer: {retailer}"))
+        # elif brand is not None and anno is not None and retailer is not None:                                                                   # le altre combinazioni sono da fare?
+        #     lista = self._model.getVendite(anno, brand, retailer)
+        #     flag = True
+        #     if len(lista)==0:
+        #         self._view.txt_out.controls.append(ft.Text(f"non ci sono corssispondenze per anno: {anno}, brand: {brand} e retailer: {retailer}"))
+        lista = self._model.getVenditeNoFiltri(anno, brand, retailer)
+        lista.sort(key=operator.attrgetter('guadagno'), reverse=True)
+        if len(lista) == 0:
+            self._view.txt_out.controls.append(ft.Text(f"non ci sono corssispondenze per anno: {anno}, brand: {brand} e retailer: {retailer}"))
         else:
-            self.selezionaFiltri()
-        # self._view.ddBrand.value ="Nessun filtro"
-        # self._view.ddAnno.value ="Nessun filtro"
-        # self._view.ddRetailer.value="Nessun filtro"
-        if flag:
             for v in lista:
                 self._view.txt_out.controls.append(ft.Text(f"{v}"))
+
             self._view._page.update()
+            self._view.ddBrand.value =""
+            self._view.ddAnno.value =""
+            self._view.ddRetailer.value=""
 
     def handleAnalizzaVendite(self,e):
         self._view.txt_out.controls.clear()

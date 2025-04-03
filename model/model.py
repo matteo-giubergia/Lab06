@@ -15,8 +15,8 @@ class Model:
     def getRetailers(self):
         return self.dao.getRetailers()
 
-    def getVenditeNoFiltri(self):
-        return self.dao.getVenditeNoFiltri()
+    def getVenditeNoFiltri(self, anno, brand, retailer):
+        return self.dao.getVenditeNoFiltri(anno, brand, retailer)
 
     def getVendite(self, anno, brand, retailer):
         return self.dao.getVendite(anno, brand, retailer)
